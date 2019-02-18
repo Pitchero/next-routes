@@ -128,7 +128,7 @@ class Routes {
 }
 
 class Route {
-  constructor ({name, pattern, page = name}) {
+  constructor ({name, pattern, page = name, meta}) {
     if (!name && !page) {
       throw new Error(`Missing page to render for route "${pattern}"`)
     }
@@ -139,6 +139,7 @@ class Route {
     this.regex = pathToRegexp(this.pattern, this.keys = [])
     this.keyNames = this.keys.map(key => key.name)
     this.toPath = pathToRegexp.compile(this.pattern)
+    this.meta = meta
   }
 
   match (path) {
