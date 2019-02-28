@@ -108,6 +108,20 @@ describe('Routes', () => {
     expect(renderer.render(<Link />).type).toBe(CustomLink)
     expect(Router).toBe(CustomRouter)
   })
+
+  test('clubRoute no external domain', () => {
+    const {routes} = setupRoute('a', '/a/:b')
+    const { urls: {as, href} } = routes.clubRoute({folder: 'test-club'}, 'a', {b: 1})
+    expect(as).toEqual('/clubs/test-club/a/1')
+    expect(href).toEqual('/a?b=1')
+  })
+
+  test('clubRoute no external domain', () => {
+    const {routes} = setupRoute('a', '/a/:b')
+    const { urls: {as, href} } = routes.clubRoute({folder: 'test-club', external_domain: 'www.test-club.com'}, 'a', {b: 1})
+    expect(as).toEqual('/a/1')
+    expect(href).toEqual('/a?b=1')
+  })
 })
 
 describe('Request handler', () => {
@@ -216,5 +230,23 @@ describe(`Router ${routerMethods.join(', ')}`, () => {
 
   test('with route not found', () => {
     setup('a').testMethods(['/b', {}], ['/b', '/b', {}])
+  })
+})
+
+describe(`Router pushClubRoute`, () => {
+  test('Club with no domain', () => {
+    const {routes} = setupRoute('a', '/a/:b')
+    const mockPush = jest.fn()
+    const Router = routes.getRouter({push: mockPush})
+    Router.pushClubRoute({folder: 'testclub'}, 'a', {b: 1}, {})
+    expect(mockPush).toBeCalledWith('/a?b=1', '/clubs/testclub/a/1', {})
+  })
+
+  test('Club with external domain', () => {
+    const {routes} = setupRoute('a', '/a/:b')
+    const mockPush = jest.fn()
+    const Router = routes.getRouter({push: mockPush})
+    Router.pushClubRoute({folder: 'testclub', external_domain: 'www.test-club.com'}, 'a', {b: 1}, {})
+    expect(mockPush).toBeCalledWith('/a?b=1', '/a/1', {})
   })
 })

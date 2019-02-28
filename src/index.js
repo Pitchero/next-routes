@@ -82,6 +82,17 @@ class Routes {
     }
   }
 
+  clubRoute (club, name, params) {
+    const route = this.findByName(name)
+    const urls = route.getUrls(params)
+
+    if (!club.external_domain) {
+      urls.as = `/clubs/${club.folder}${urls.as}`
+    }
+
+    return {route, urls}
+  }
+
   getRequestHandler (app, customHandler) {
     const nextHandler = app.getRequestHandler()
 
@@ -123,6 +134,10 @@ class Routes {
     Router.pushRoute = wrap('push')
     Router.replaceRoute = wrap('replace')
     Router.prefetchRoute = wrap('prefetch')
+    Router.pushClubRoute = (club, name, params, options) => {
+      const { urls: {as, href} } = this.clubRoute(club, name, params)
+      return Router['push'](href, as, options)
+    }
     return Router
   }
 }
