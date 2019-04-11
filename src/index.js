@@ -138,6 +138,10 @@ class Routes {
       const { urls: {as, href} } = this.clubRoute(club, name, params)
       return Router['push'](href, as, options)
     }
+    Router.replaceClubRoute = (club, name, params, options) => {
+      const { urls: {as, href} } = this.clubRoute(club, name, params)
+      return Router['replace'](href, as, options)
+    }
     return Router
   }
 }

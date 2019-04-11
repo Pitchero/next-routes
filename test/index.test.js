@@ -250,3 +250,21 @@ describe(`Router pushClubRoute`, () => {
     expect(mockPush).toBeCalledWith('/a?b=1', '/a/1', {})
   })
 })
+
+describe(`Router replaceClubRoute`, () => {
+  test('Club with no domain', () => {
+    const {routes} = setupRoute('a', '/a/:b')
+    const mockReplace = jest.fn()
+    const Router = routes.getRouter({replace: mockReplace})
+    Router.replaceClubRoute({folder: 'testclub'}, 'a', {b: 1}, {})
+    expect(mockReplace).toBeCalledWith('/a?b=1', '/clubs/testclub/a/1', {})
+  })
+
+  test('Club with external domain', () => {
+    const {routes} = setupRoute('a', '/a/:b')
+    const mockReplace = jest.fn()
+    const Router = routes.getRouter({replace: mockReplace})
+    Router.replaceClubRoute({folder: 'testclub', external_domain: 'www.test-club.com'}, 'a', {b: 1}, {})
+    expect(mockReplace).toBeCalledWith('/a?b=1', '/a/1', {})
+  })
+})
