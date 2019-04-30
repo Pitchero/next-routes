@@ -162,7 +162,7 @@ describe('Request handler', () => {
       pattern: '/calendar',
       page: 'calendar/index'
     })
-    const {route, query} = routes.match('http://test.app/clubs/testclub/calendar')
+    const {route, query} = routes.match('/clubs/testclub/calendar', 'test.app')
     routes.getRequestHandler(app)(req, res)
     expect(app.render).toBeCalledWith(req, res, route.page, query)
   })
@@ -179,12 +179,12 @@ describe('Request handler', () => {
       pattern: '/calendar',
       page: 'calendar/index'
     })
-    const {route: externalRoute, query: externalQuery} = routes.match('http://www.externaldomain.com/clubs/testclub/calendar')
+    const {route: externalRoute, query: externalQuery} = routes.match('/clubs/testclub/calendar', 'www.externaldomain.com')
     routes.getRequestHandler(app)(req, res)
     expect(app.render).toBeCalledWith(req, res, externalRoute.page, externalQuery)
     expect(externalRoute.name).toBe('calendar_with_folder')
 
-    const {route, query} = routes.match('http://test.app/clubs/testclub/calendar')
+    const {route, query} = routes.match('/clubs/testclub/calendar', 'test.app')
     routes.getRequestHandler(app)(req, res)
     expect(app.render).toBeCalledWith(req, res, route.page, query)
     expect(route.name).toBe('calendar_without_folder')

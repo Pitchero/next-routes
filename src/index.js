@@ -58,11 +58,11 @@ class Routes {
     return pathname.substr(prefix.length)
   }
 
-  match (url) {
+  match (url, hostname) {
     const parsedUrl = parse(url, true)
-    const {query, host} = parsedUrl
+    const {query} = parsedUrl
     let pathname = parsedUrl.pathname
-    if (host === this.appDomain) {
+    if (hostname === this.appDomain) {
       pathname = this.stripClubsFolderPath(parsedUrl.pathname)
     }
 
@@ -102,7 +102,7 @@ class Routes {
     const nextHandler = app.getRequestHandler()
 
     return (req, res) => {
-      const {route, query, parsedUrl} = this.match(req.url)
+      const {route, query, parsedUrl} = this.match(req.url, req.hostname)
 
       if (route) {
         if (customHandler) {
