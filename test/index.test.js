@@ -126,7 +126,7 @@ describe('Routes', () => {
 
 describe('Request handler', () => {
   const setup = url => {
-    const routes = nextRoutes()
+    const routes = nextRoutes({appDomain: 'test.app'})
     const nextHandler = jest.fn()
     const app = {getRequestHandler: () => nextHandler, render: jest.fn()}
     return {app, routes, req: {url}, res: {}}
@@ -156,10 +156,38 @@ describe('Request handler', () => {
   })
 
   test('find route and call render with club folder prefix', () => {
-    const {routes, app, req, res} = setup('/a')
-    const {route, query} = routes.add('a').match('/clubs/testclub/a')
+    const {routes, app, req, res} = setup('/calendar')
+    routes.add({
+      name: 'calendar',
+      pattern: '/calendar',
+      page: 'calendar/index'
+    })
+    const {route, query} = routes.match('http://test.app/clubs/testclub/calendar')
     routes.getRequestHandler(app)(req, res)
     expect(app.render).toBeCalledWith(req, res, route.page, query)
+  })
+
+  test('find route and call render with club folder prefix and external domain', () => {
+    const {routes, app, req, res} = setup('/clubs/testclub/calendar')
+    routes.add({
+      name: 'calendar_with_folder',
+      pattern: '/clubs/testclub/calendar',
+      page: 'calendar/index'
+    })
+    routes.add({
+      name: 'calendar_without_folder',
+      pattern: '/calendar',
+      page: 'calendar/index'
+    })
+    const {route: externalRoute, query: externalQuery} = routes.match('http://www.externaldomain.com/clubs/testclub/calendar')
+    routes.getRequestHandler(app)(req, res)
+    expect(app.render).toBeCalledWith(req, res, externalRoute.page, externalQuery)
+    expect(externalRoute.name).toBe('calendar_with_folder')
+
+    const {route, query} = routes.match('http://test.app/clubs/testclub/calendar')
+    routes.getRequestHandler(app)(req, res)
+    expect(app.render).toBeCalledWith(req, res, route.page, query)
+    expect(route.name).toBe('calendar_without_folder')
   })
 })
 

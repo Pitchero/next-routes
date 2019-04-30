@@ -9,9 +9,11 @@ module.exports = opts => new Routes(opts)
 class Routes {
   constructor ({
     Link = NextLink,
-    Router = NextRouter
+    Router = NextRouter,
+    appDomain
   } = {}) {
     this.routes = []
+    this.appDomain = appDomain
     this.Link = this.getLink(Link)
     this.Router = this.getRouter(Router)
     this.clubsFolderRegex = pathToRegexp('/clubs/:folder/(.*)')
@@ -58,8 +60,11 @@ class Routes {
 
   match (url) {
     const parsedUrl = parse(url, true)
-    const query = parsedUrl.query
-    let pathname = this.stripClubsFolderPath(parsedUrl.pathname)
+    const {query, host} = parsedUrl
+    let pathname = parsedUrl.pathname
+    if (host === this.appDomain) {
+      pathname = this.stripClubsFolderPath(parsedUrl.pathname)
+    }
 
     return this.routes.reduce((result, route) => {
       if (result.route) return result
