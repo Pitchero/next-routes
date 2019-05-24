@@ -1,6 +1,6 @@
 {
   "name": "@pitchero/next-routes",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "Fork of next-routes to add Pitchero specific routing rules",
   "repository": {
     "type": "git",

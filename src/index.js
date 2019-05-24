@@ -16,7 +16,7 @@ class Routes {
     this.appDomain = appDomain
     this.Link = this.getLink(Link)
     this.Router = this.getRouter(Router)
-    this.clubsFolderRegex = pathToRegexp('/clubs/:folder/(.*)')
+    this.clubsFolderRegex = pathToRegexp('/clubs/:folder([a-zA-Z0-9_-]+)(.*)')
   }
 
   add (name, pattern, page) {
@@ -55,7 +55,8 @@ class Routes {
 
     const folder = folderPatternMatch[1]
     const prefix = `/clubs/${folder}`
-    return pathname.substr(prefix.length)
+    const stripped = pathname.substr(prefix.length)
+    return stripped.charAt(0) === '/' ? stripped : `/${stripped}`
   }
 
   match (url, hostname) {
