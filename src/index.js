@@ -92,7 +92,7 @@ class Routes {
     const route = this.findByName(name)
     const urls = route.getUrls(params)
 
-    if (!club.external_domain) {
+    if (!club.externalDomain) {
       urls.as = `/clubs/${club.folder}${urls.as}`
     }
 
