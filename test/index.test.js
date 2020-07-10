@@ -129,7 +129,7 @@ describe('Request handler', () => {
     const routes = nextRoutes({appDomain: 'test.app'})
     const nextHandler = jest.fn()
     const app = {getRequestHandler: () => nextHandler, render: jest.fn()}
-    return {app, routes, req: {url}, res: {}}
+    return {app, routes, req: {originalUrl: url, url}, res: {}}
   }
 
   test('find route and call render', () => {
