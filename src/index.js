@@ -103,6 +103,12 @@ class Routes {
     const nextHandler = app.getRequestHandler()
 
     return (req, res) => {
+      // Ensure any double slashes at the start of the path get stripped via a redirect.
+      // e.g. `//calendar` becomes `/calendar`
+      if (req.url.startsWith('//')) {
+        res.redirect(308, req.url.substr(1))
+      }
+
       const {route, query, parsedUrl} = this.match(req.url, req.hostname)
 
       if (route) {
