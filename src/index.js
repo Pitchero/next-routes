@@ -107,8 +107,6 @@ class Routes {
       // e.g. `//calendar` becomes `/calendar`
       if (req.originalUrl.startsWith('//')) {
         res.redirect(308, req.originalUrl.substr(1))
-      } else {
-        res.set('X-originalUrl', req.originalUrl);
       }
 
       const {route, query, parsedUrl} = this.match(req.url, req.hostname)
