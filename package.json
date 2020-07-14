@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/Pitchero/next-routes.git"
   },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com/pitchero"
+  },
   "main": "dist",
   "typings": "typings/next-routes.d.ts",
   "files": [
